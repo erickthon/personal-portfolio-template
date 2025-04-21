@@ -1,0 +1,18 @@
+[
+  [
+    {
+      "title": "Project Title 1",
+      "description": "Brief description of what the project does or solves.",
+      "tech": ["Tech1", "Tech2", "Tech3"],
+      "github": "https://github.com/yourusername/project-repo-1"
+    },
+    {
+      "title": "Project Title 2",
+      "description": "Another project description with key highlights or features.",
+      "tech": ["TechA", "TechB", "TechC"],
+      "github": "https://github.com/yourusername/project-repo-2"
+    }
+  ]
+  
+    
+  ]

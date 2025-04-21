@@ -1,0 +1,5 @@
+apiVersion: v2
+name: portfolio
+description: A personal portfolio app with FastAPI backend and React frontend
+version: 0.1.0
+appVersion: "1.0"

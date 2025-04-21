@@ -1,0 +1,8 @@
+# This is just a dummy template so Helm has something to render
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cert-manager-noop
+  namespace: kube-system
+data:
+  note: This chart uses a dependency to install cert-manager from Jetstack

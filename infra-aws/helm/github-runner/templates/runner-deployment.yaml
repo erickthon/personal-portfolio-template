@@ -1,0 +1,14 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: github-runner
+  namespace: actions-runner-system
+spec:
+  replicas: {{ .Values.runnerDeployment.replicas }}
+  template:
+    spec:
+      repository: {{ .Values.runnerDeployment.repository }}
+      labels:
+        {{- range .Values.runnerDeployment.labels }}
+        - {{ . }}
+        {{- end }}

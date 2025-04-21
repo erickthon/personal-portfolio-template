@@ -1,0 +1,10 @@
+apiVersion: v2
+name: cert-manager-wrapper
+description: Wrapper Helm chart to deploy cert-manager
+type: application
+version: 0.1.0
+appVersion: "v1.13.2"  # Match the cert-manager version you're targeting
+dependencies:
+  - name: cert-manager
+    version: 1.13.2
+    repository: https://charts.jetstack.io

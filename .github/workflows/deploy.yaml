@@ -1,0 +1,68 @@
+name: Deploy to EKS
+
+on:
+  push:
+    branches: [main] # You can change this to your deployment branch
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, <runner-label>] # Replace <runner-label> with your actual runner label
+
+    env:
+      AWS_REGION: <aws-region>
+      ECR_REPO: <your-account-id>.dkr.ecr.<aws-region>.amazonaws.com/<your-ecr-repo-name>
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker image tag
+        id: version
+        run: |
+          IMAGE_TAG=v$(date +%Y%m%d)-${GITHUB_SHA::7}
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          echo "Using image tag: $IMAGE_TAG"
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::<your-account-id>:role/<your-github-role-name>
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Install AWS CLI
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+          aws --version
+
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region $AWS_REGION \
+            | docker login --username AWS --password-stdin $ECR_REPO
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t $ECR_REPO:$IMAGE_TAG .
+          docker push $ECR_REPO:$IMAGE_TAG
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --region $AWS_REGION --name <your-cluster-name>
+
+      - name: Install Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+          helm version
+
+      - name: Deploy to EKS
+        run: |
+          helm upgrade --install <your-app-name> <path-to-your-helm-chart> \
+            --namespace <k8s-namespace> \
+            --set image.repository=$ECR_REPO \
+            --set image.tag=$IMAGE_TAG \
+            --set image.pullPolicy=Always \
+            --wait --timeout 3m
