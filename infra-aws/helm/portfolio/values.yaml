@@ -1,0 +1,25 @@
+replicaCount: 1
+
+image:
+  repository: <your-ecr-repo>.dkr.ecr.<your-region>.amazonaws.com/<your-app-name>
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: LoadBalancer
+  port: 80         # Public port exposed by AWS ELB
+  targetPort: 8000 # Your app's internal port
+
+resources: {}
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: <your-domain.com>
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+

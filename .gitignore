@@ -52,7 +52,6 @@ docker-volume/
 *.tgz
 charts/
 *.prov
-values.yaml
 
 # === OS / System ===
 .DS_Store

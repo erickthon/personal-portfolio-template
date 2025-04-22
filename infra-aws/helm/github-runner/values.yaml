@@ -1,0 +1,14 @@
+githubApp:
+  id: "<your-github-app-id>"
+  installationID: "<your-installation-id>"
+  privateKey: |
+    -----BEGIN RSA PRIVATE KEY-----
+    <your-private-key-here>
+    -----END RSA PRIVATE KEY-----
+
+runnerDeployment:
+  repository: <your-github-username>/<your-repo-name>
+  labels:
+    - self-hosted
+    - <custom-label>
+  replicas: 1
